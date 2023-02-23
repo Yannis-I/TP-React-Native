@@ -1,30 +1,59 @@
-import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, Text, TextInput, Pressable } from "react-native";
 
-export default function Task(props) {
+export default function Task({ task, onClick, index }) {
+  const [isSelected, setSelected] = useState(false);
+
+  const handleClickIn = () => {
+    setSelected(true);
+  };
+  const handleClickOut = () => {
+    setSelected(false);
+    console.log("là");
+  };
+
   return (
     <View style={styles.container}>
-      <Text
-        style={
-          props.state == "todo"
-            ? [styles.task, styles.todo]
-            : [styles.task, styles.done]
-        }
-      >
-        {props.text}
+      <Text onPress={() => onClick(index)}>
+        {task.state == "todo" ? "⬜" : "✅"}
       </Text>
-      <Text>{props.state == "todo" ? "⬜" : "✅"}</Text>
+      {isSelected ? (
+        <Pressable onPressOut={handleClickOut}>
+          <TextInput
+            style={
+              task.state == "todo"
+                ? [styles.task, styles.todo]
+                : [styles.task, styles.done]
+            }
+            value={task.text}
+          ></TextInput>
+        </Pressable>
+      ) : (
+        <Pressable onPress={handleClickIn}>
+          <Text
+            style={
+              task.state == "todo"
+                ? [styles.task, styles.todo]
+                : [styles.task, styles.done]
+            }
+          >
+            {task.text}
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    display: "flex",
+    flexDirection: "row",
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "space-between",
+    margin: 5,
   },
+  task: { marginLeft: 25 },
   todo: { color: "black" },
   done: { color: "green" },
 });

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View } from "react-native";
+import { TextInput, View, Text, StyleSheet } from "react-native";
 import Task from "./Task";
 
 export default function TaskList() {
@@ -16,11 +16,56 @@ export default function TaskList() {
     { text: "Faire un triathlon", state: "todo" },
   ]);
 
+  const [inputValue, setInputValue] = useState("");
+  const handleAddTask = () => {
+    setTaskList([...taskList, { text: inputValue, state: "todo" }]);
+  };
+
+  const toggleCompleted = (id) => {
+    const updateTaskList = taskList.map((task, index) =>
+      id === index
+        ? task.state == "todo"
+          ? { ...task, state: "done" }
+          : { ...task, state: "todo" }
+        : task
+    );
+
+    setTaskList(updateTaskList);
+  };
+
   return (
     <View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.plus} onPress={handleAddTask}>
+          ➕
+        </Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Ajoutez une nouvelle tâche"
+          onChangeText={(text) => setInputValue(text)}
+          value={inputValue}
+        ></TextInput>
+      </View>
       {taskList.map((task, index) => (
-        <Task key={index} text={task.text} state={task.state} />
+        <Task key={index} index={index} task={task} onClick={toggleCompleted} />
       ))}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  inputContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 5,
+  },
+  input: {
+    marginLeft: 20,
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: "darkgrey",
+    margin: 5,
+    padding: 5,
+  },
+});
