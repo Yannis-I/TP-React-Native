@@ -1,35 +1,21 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable } from "react-native";
+import TaskModal from "./TaskModal";
 
 export default function Task({ task, onClick, index }) {
   const [isSelected, setSelected] = useState(false);
 
-  const handleClickIn = () => {
+  const handleClick = () => {
     setSelected(true);
-  };
-  const handleClickOut = () => {
-    setSelected(false);
-    console.log("là");
   };
 
   return (
     <View style={styles.container}>
+       <TaskModal isSelected={isSelected} setSelected={setSelected} task={task} ></TaskModal>
       <Text onPress={() => onClick(index)}>
         {task.state == "todo" ? "⬜" : "✅"}
       </Text>
-      {isSelected ? (
-        <Pressable onPressOut={handleClickOut}>
-          <TextInput
-            style={
-              task.state == "todo"
-                ? [styles.task, styles.todo]
-                : [styles.task, styles.done]
-            }
-            value={task.text}
-          ></TextInput>
-        </Pressable>
-      ) : (
-        <Pressable onPress={handleClickIn}>
+        <Pressable onPress={handleClick}>
           <Text
             style={
               task.state == "todo"
@@ -40,7 +26,6 @@ export default function Task({ task, onClick, index }) {
             {task.text}
           </Text>
         </Pressable>
-      )}
     </View>
   );
 }

@@ -6,7 +6,7 @@ export default function TaskList() {
   const [taskList, setTaskList] = useState([
     { text: "Faire les courses", state: "done" },
     { text: "Aller à la salle de sport 3 fois par semaine", state: "todo" },
-    { text: "Monter à plus de 5000m d altitude", state: "todo" },
+    { text: "Monter à plus de 5000m d'altitude", state: "todo" },
     { text: "Acheter mon premier appartement", state: "todo" },
     { text: "Perdre 5 kgs", state: "todo" },
     { text: "Gagner en productivité", state: "todo" },
@@ -65,7 +65,11 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "darkgrey",
+    borderRadius: 20,
     margin: 5,
-    padding: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 15,
+    paddingRight: 15,
   },
 });
