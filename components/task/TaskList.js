@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { TextInput, View, Text, StyleSheet } from "react-native";
+import { TouchableRipple } from "react-native-paper";
 import Task from "./Task";
 
 export default function TaskList() {
@@ -18,11 +19,14 @@ export default function TaskList() {
 
   const [inputValue, setInputValue] = useState("");
   const handleAddTask = () => {
-    setTaskList([...taskList, { text: inputValue, state: "todo" }]);
+    if (inputValue != "" && !/^\s*$/.test(inputValue)) {
+      setTaskList([...taskList, { text: inputValue, state: "todo" }]);
+      setInputValue("");
+    }
   };
 
   const toggleCompleted = (id) => {
-    const updateTaskList = taskList.map((task, index) =>
+    const updatedTaskList = taskList.map((task, index) =>
       id === index
         ? task.state == "todo"
           ? { ...task, state: "done" }
@@ -30,15 +34,31 @@ export default function TaskList() {
         : task
     );
 
-    setTaskList(updateTaskList);
+    setTaskList(updatedTaskList);
+  };
+
+  const updateTask = (id, text) => {
+    if (inputValue != "" && !/^\s*$/.test(inputValue)) {
+      const updatedTaskList = taskList.map((task, index) =>
+        id === index ? { ...task, text: text } : task
+      );
+      setTaskList(updatedTaskList);
+    }
+  };
+
+  const deleteTask = (id) => {
+    let tempTaskList = [...taskList];
+    tempTaskList.splice(id, 1);
+
+    setTaskList(tempTaskList);
   };
 
   return (
     <View>
       <View style={styles.inputContainer}>
-        <Text style={styles.plus} onPress={handleAddTask}>
-          ➕
-        </Text>
+        <TouchableRipple onPress={handleAddTask}>
+          <Text style={styles.plus}>➕</Text>
+        </TouchableRipple>
         <TextInput
           style={styles.input}
           placeholder="Ajoutez une nouvelle tâche"
@@ -47,7 +67,17 @@ export default function TaskList() {
         ></TextInput>
       </View>
       {taskList.map((task, index) => (
-        <Task key={index} index={index} task={task} onClick={toggleCompleted} />
+        <>
+          <Task
+            key={index}
+            index={index}
+            task={task}
+            updateTask={updateTask}
+            deleteTask={deleteTask}
+            onClick={toggleCompleted}
+          />
+          <View style={styles.separator}></View>
+        </>
       ))}
     </View>
   );
@@ -58,7 +88,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    paddingLeft: 5,
+    paddingLeft: 3,
   },
   input: {
     marginLeft: 20,
@@ -66,10 +96,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "darkgrey",
     borderRadius: 20,
-    margin: 5,
+    margin: 10,
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 15,
     paddingRight: 15,
+    width: "100%",
+  },
+  plus: {
+    backgroundColor: "rgba(0, 0, 0, 0.15)",
+    borderRadius: 5,
+    padding: 3,
+    paddingBottom: 1,
+  },
+  separator: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "lightgrey",
   },
 });

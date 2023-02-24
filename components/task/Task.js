@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
+import { TouchableRipple } from "react-native-paper";
 import TaskModal from "./TaskModal";
 
-export default function Task({ task, onClick, index }) {
+export default function Task({ task, onClick, index, updateTask, deleteTask }) {
   const [isSelected, setSelected] = useState(false);
 
   const handleClick = () => {
@@ -11,21 +12,32 @@ export default function Task({ task, onClick, index }) {
 
   return (
     <View style={styles.container}>
-       <TaskModal isSelected={isSelected} setSelected={setSelected} task={task} ></TaskModal>
-      <Text onPress={() => onClick(index)}>
+      <TaskModal
+        index={index}
+        isSelected={isSelected}
+        setSelected={setSelected}
+        task={task}
+        updateTask={updateTask}
+        deleteTask={deleteTask}
+      ></TaskModal>
+      <Text
+        onPress={() => {
+          onClick(index);
+        }}
+      >
         {task.state == "todo" ? "⬜" : "✅"}
       </Text>
-        <Pressable onPress={handleClick}>
-          <Text
-            style={
-              task.state == "todo"
-                ? [styles.task, styles.todo]
-                : [styles.task, styles.done]
-            }
-          >
-            {task.text}
-          </Text>
-        </Pressable>
+      <TouchableRipple onPress={handleClick} style={styles.taskPressable}>
+        <Text
+          style={
+            task.state == "todo"
+              ? [styles.task, styles.todo]
+              : [styles.task, styles.done]
+          }
+        >
+          {task.text}
+        </Text>
+      </TouchableRipple>
     </View>
   );
 }
@@ -38,7 +50,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     margin: 5,
   },
-  task: { marginLeft: 25 },
+  task: { fontSize: 15 },
+  taskPressable: {
+    width: "90%",
+    marginLeft: 15,
+    marginRight: 15,
+    padding: 10,
+  },
   todo: { color: "black" },
   done: { color: "green" },
 });
