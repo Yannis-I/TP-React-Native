@@ -38,12 +38,10 @@ export default function TaskList() {
   };
 
   const updateTask = (id, text) => {
-    if (inputValue != "" && !/^\s*$/.test(inputValue)) {
-      const updatedTaskList = taskList.map((task, index) =>
-        id === index ? { ...task, text: text } : task
-      );
-      setTaskList(updatedTaskList);
-    }
+    const updatedTaskList = taskList.map((task, index) =>
+      id === index ? { ...task, text: text } : task
+    );
+    setTaskList(updatedTaskList);
   };
 
   const deleteTask = (id) => {
@@ -67,9 +65,8 @@ export default function TaskList() {
         ></TextInput>
       </View>
       {taskList.map((task, index) => (
-        <>
+        <View key={index}>
           <Task
-            key={index}
             index={index}
             task={task}
             updateTask={updateTask}
@@ -77,7 +74,7 @@ export default function TaskList() {
             onClick={toggleCompleted}
           />
           <View style={styles.separator}></View>
-        </>
+        </View>
       ))}
     </View>
   );

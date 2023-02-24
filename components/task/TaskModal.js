@@ -13,8 +13,13 @@ export default function TaskModal({
   const [inputValue, setInputValue] = useState(task.text);
 
   const handlePressClose = () => {
-    setSelected(!isSelected);
-    updateTask(index, inputValue);
+    if (inputValue != "" && !/^\s*$/.test(inputValue)) {
+      setSelected(!isSelected);
+      updateTask(index, inputValue);
+    } else {
+      setSelected(!isSelected);
+      setInputValue(task.text);
+    }
   };
 
   const handlDelete = () => {
@@ -28,7 +33,6 @@ export default function TaskModal({
       transparent={true}
       visible={isSelected}
       onRequestClose={() => {
-        Alert.alert("Modal has been closed.");
         setSelected(!isSelected);
       }}
     >
