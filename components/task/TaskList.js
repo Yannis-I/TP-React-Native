@@ -1,12 +1,23 @@
 import React, { useState } from "react";
-import { TextInput, View, Text, StyleSheet, Keyboard, FlatList } from "react-native";
+import {
+  TextInput,
+  View,
+  Text,
+  StyleSheet,
+  Keyboard,
+  FlatList,
+} from "react-native";
 import { TouchableRipple } from "react-native-paper";
 import Task from "./Task";
 
 export default function TaskList() {
   const [taskList, setTaskList] = useState([
     { id: 1, text: "Faire les courses", state: "done" },
-    { id: 2, text: "Aller à la salle de sport 3 fois par semaine", state: "todo" },
+    {
+      id: 2,
+      text: "Aller à la salle de sport 3 fois par semaine",
+      state: "todo",
+    },
     { id: 3, text: "Monter à plus de 5000m d'altitude", state: "todo" },
     { id: 4, text: "Acheter mon premier appartement", state: "todo" },
     { id: 5, text: "Perdre 5 kgs", state: "todo" },
@@ -22,9 +33,9 @@ export default function TaskList() {
   const handleAddTask = () => {
     let id = null;
     let i = 1;
-    while (id == null){
-      if((taskList.findIndex(task => task.id == i)) === -1){
-        console.log(taskList.findIndex(task => task.id == i));
+    while (id == null) {
+      if (taskList.findIndex((task) => task.id == i) === -1) {
+        console.log(taskList.findIndex((task) => task.id == i));
         id = i;
         console.log("i : ", i);
         console.log("id : ", id);
@@ -60,14 +71,14 @@ export default function TaskList() {
 
   const deleteTask = (id) => {
     let tempTaskList = [...taskList];
-    const index = tempTaskList.findIndex(task => task.id == id);
+    const index = tempTaskList.findIndex((task) => task.id == id);
     if (index !== -1) {
       tempTaskList.splice(index, 1);
     }
     setTaskList([...tempTaskList]);
   };
 
-  const taskElement = ({item}) => (
+  const taskElement = ({ item }) => (
     <View>
       <Task
         index={item.id}
@@ -94,23 +105,11 @@ export default function TaskList() {
           value={inputValue}
         ></TextInput>
       </View>
-      <FlatList 
+      <FlatList
         data={taskList}
         renderItem={taskElement}
-        keyExtractor={ item => item.id }
+        keyExtractor={(item) => item.id}
       />
-      {/*taskList.map((task, index) => (
-        <View key={index}>
-          <Task
-            index={index}
-            task={task}
-            updateTask={updateTask}
-            deleteTask={deleteTask}
-            onClick={toggleCompleted}
-          />
-          <View style={styles.separator}></View>
-        </View>
-      ))*/}
     </View>
   );
 }
@@ -139,6 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.15)",
     borderRadius: 5,
     padding: 3,
+    marginLeft: 4,
   },
   separator: {
     width: "100%",
