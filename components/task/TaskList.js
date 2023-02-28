@@ -1,33 +1,47 @@
 import React, { useState } from "react";
-import { TextInput, View, Text, StyleSheet } from "react-native";
+import { TextInput, View, Text, StyleSheet, Keyboard, FlatList } from "react-native";
 import { TouchableRipple } from "react-native-paper";
 import Task from "./Task";
 
 export default function TaskList() {
   const [taskList, setTaskList] = useState([
-    { text: "Faire les courses", state: "done" },
-    { text: "Aller à la salle de sport 3 fois par semaine", state: "todo" },
-    { text: "Monter à plus de 5000m d'altitude", state: "todo" },
-    { text: "Acheter mon premier appartement", state: "todo" },
-    { text: "Perdre 5 kgs", state: "todo" },
-    { text: "Gagner en productivité", state: "todo" },
-    { text: "Apprendre un nouveau langage", state: "todo" },
-    { text: "Faire une mission en freelance", state: "todo" },
-    { text: "Organiser un meetup autour de la tech", state: "todo" },
-    { text: "Faire un triathlon", state: "todo" },
+    { id: 1, text: "Faire les courses", state: "done" },
+    { id: 2, text: "Aller à la salle de sport 3 fois par semaine", state: "todo" },
+    { id: 3, text: "Monter à plus de 5000m d'altitude", state: "todo" },
+    { id: 4, text: "Acheter mon premier appartement", state: "todo" },
+    { id: 5, text: "Perdre 5 kgs", state: "todo" },
+    { id: 6, text: "Gagner en productivité", state: "todo" },
+    { id: 7, text: "Apprendre un nouveau langage", state: "todo" },
+    { id: 8, text: "Faire une mission en freelance", state: "todo" },
+    { id: 9, text: "Organiser un meetup autour de la tech", state: "todo" },
+    { id: 10, text: "Faire un triathlon", state: "todo" },
   ]);
 
   const [inputValue, setInputValue] = useState("");
+
   const handleAddTask = () => {
-    if (inputValue != "" && !/^\s*$/.test(inputValue)) {
-      setTaskList([...taskList, { text: inputValue, state: "todo" }]);
-      setInputValue("");
+    let id = null;
+    let i = 1;
+    while (id == null){
+      if((taskList.findIndex(task => task.id == i)) === -1){
+        console.log(taskList.findIndex(task => task.id == i));
+        id = i;
+        console.log("i : ", i);
+        console.log("id : ", id);
+      }
+      i++;
     }
+    if (inputValue != "" && !/^\s*$/.test(inputValue)) {
+      setTaskList([...taskList, { id: id, text: inputValue, state: "todo" }]);
+      setInputValue("");
+      Keyboard.dismiss();
+    }
+    console.log(taskList);
   };
 
   const toggleCompleted = (id) => {
-    const updatedTaskList = taskList.map((task, index) =>
-      id === index
+    const updatedTaskList = taskList.map((task) =>
+      id === task.id
         ? task.state == "todo"
           ? { ...task, state: "done" }
           : { ...task, state: "todo" }
@@ -38,18 +52,33 @@ export default function TaskList() {
   };
 
   const updateTask = (id, text) => {
-    const updatedTaskList = taskList.map((task, index) =>
-      id === index ? { ...task, text: text } : task
+    const updatedTaskList = taskList.map((task) =>
+      id === task.id ? { ...task, text: text } : task
     );
     setTaskList(updatedTaskList);
   };
 
   const deleteTask = (id) => {
     let tempTaskList = [...taskList];
-    tempTaskList.splice(id, 1);
-
-    setTaskList(tempTaskList);
+    const index = tempTaskList.findIndex(task => task.id == id);
+    if (index !== -1) {
+      tempTaskList.splice(index, 1);
+    }
+    setTaskList([...tempTaskList]);
   };
+
+  const taskElement = ({item}) => (
+    <View>
+      <Task
+        index={item.id}
+        task={item}
+        updateTask={updateTask}
+        deleteTask={deleteTask}
+        onClick={toggleCompleted}
+      />
+      <View style={styles.separator}></View>
+    </View>
+  );
 
   return (
     <View>
@@ -61,10 +90,16 @@ export default function TaskList() {
           style={styles.input}
           placeholder="Ajoutez une nouvelle tâche"
           onChangeText={(text) => setInputValue(text)}
+          onSubmitEditing={handleAddTask}
           value={inputValue}
         ></TextInput>
       </View>
-      {taskList.map((task, index) => (
+      <FlatList 
+        data={taskList}
+        renderItem={taskElement}
+        keyExtractor={ item => item.id }
+      />
+      {/*taskList.map((task, index) => (
         <View key={index}>
           <Task
             index={index}
@@ -75,7 +110,7 @@ export default function TaskList() {
           />
           <View style={styles.separator}></View>
         </View>
-      ))}
+      ))*/}
     </View>
   );
 }
@@ -98,13 +133,12 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 15,
     paddingRight: 15,
-    width: "100%",
+    flex: 1,
   },
   plus: {
     backgroundColor: "rgba(0, 0, 0, 0.15)",
     borderRadius: 5,
     padding: 3,
-    paddingBottom: 1,
   },
   separator: {
     width: "100%",

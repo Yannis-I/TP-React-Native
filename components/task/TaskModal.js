@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, Alert, Modal, TextInput } from "react-native";
+import { StyleSheet, View, Text, Alert, Modal, TextInput, Keyboard } from "react-native";
 import { TouchableRipple } from "react-native-paper";
 
 export default function TaskModal({
@@ -20,6 +20,7 @@ export default function TaskModal({
       setSelected(!isSelected);
       setInputValue(task.text);
     }
+    Keyboard.dismiss();
   };
 
   const handlDelete = () => {
@@ -41,10 +42,11 @@ export default function TaskModal({
           <TextInput
             editable
             multiline
-            numberOfLines={3}
+            numberOfLines={2}
             maxLength={80}
             style={styles.modalText}
             onChangeText={(text) => setInputValue(text)}
+            onSubmitEditing={handlePressClose}
             value={inputValue}
           ></TextInput>
           <TouchableRipple style={styles.selectButton} onPress={handlDelete}>
@@ -54,7 +56,7 @@ export default function TaskModal({
             style={[styles.button, styles.buttonClose]}
             onPress={() => handlePressClose()}
           >
-            <Text style={styles.textStyle}>Fermer</Text>
+            <Text style={styles.textStyle}>Enregistrer</Text>
           </TouchableRipple>
         </View>
       </View>
@@ -70,10 +72,11 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
+    minWidth: "75%",
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -105,9 +108,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modalText: {
-    marginBottom: 15,
+    width: 200,
+    marginBottom: 5,
     textAlign: "center",
     fontWeight: "bold",
-    height: "fit-content",
+    color: "rgba(0, 0, 0, 0.5)",
+    borderWidth: 1,
+    borderColor: "lightgrey",
+    borderStyle: "solid",
+    borderRadius: 5,
+    padding: 10,
   },
 });
